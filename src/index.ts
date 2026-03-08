@@ -2,6 +2,7 @@ import express from 'express';
 import dotenv from 'dotenv';
 import { userRouter } from './routes/user.routes';
 import { AppDataSource } from './data-source';
+import { mainRouter } from './routes/main.route';
 
 dotenv.config();
 
@@ -20,7 +21,7 @@ app.get('/', (req, res) => {
   res.send('Welcome to the Social Media Platform API! Server is running successfully.');
 });
 
-app.use('/api/users', userRouter);
+app.use('/api/', mainRouter);
 
 const PORT = process.env.PORT || 3000;
 
