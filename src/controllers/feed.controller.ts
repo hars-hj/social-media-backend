@@ -8,6 +8,10 @@ export const getFeed = async (req: Request, res: Response) => {
 
     const userId = Number(req.query.userId);
 
+    if (!req.query.userId || isNaN(userId)) {
+      return res.status(400).json({ message: "Valid userId is required" });
+    }
+
     const limit = Number(req.query.limit) || 10;
     const offset = Number(req.query.offset) || 0;
 
@@ -15,25 +19,16 @@ export const getFeed = async (req: Request, res: Response) => {
 
     const posts = await postRepo
       .createQueryBuilder("post")
-
       .leftJoinAndSelect("post.author", "author")
-
       .leftJoin("post.likes", "likes")
-
       .leftJoin("post.hashtags", "ph")
       .leftJoin("ph.hashtag", "hashtag")
-
       .leftJoin("follows", "follow", "follow.followingId = author.id")
-
       .where("follow.followerId = :userId", { userId })
-
       .loadRelationCountAndMap("post.likeCount", "post.likes")
-
       .orderBy("post.created_at", "DESC")
-
       .take(limit)
       .skip(offset)
-
       .getMany();
 
     return res.json({

@@ -54,14 +54,14 @@ export const getPostById = async (req:Request, res:Response)=>{
 export const createPost = async (req: Request, res: Response) => {
   try {
 
-    const { content, authorId } = req.body;
+    const { content, userId } = req.body;
 
     const postRepo = AppDataSource.getRepository(Post);
     const userRepo = AppDataSource.getRepository(User);
     const hashtagRepo = AppDataSource.getRepository(Hashtag);
     const postHashtagRepo = AppDataSource.getRepository(PostHashtag);
 
-    const user = await userRepo.findOneBy({ id: authorId });
+    const user = await userRepo.findOneBy({ id: userId });
 
     if (!user) {
       return res.status(404).json({ message: "User not found" });
